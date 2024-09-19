@@ -1,8 +1,5 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<html class="no-js" lang="">
 {% load static %}
 <head>
     <meta charset="utf-8">
@@ -24,48 +21,30 @@
     <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-
-    <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 </head>
-<body class="bg-dark">
+<body class="bg-dark" style="background: url('{% static "images/download.png" %}'); background-size: cover;">
 
     <div class="sufee-login d-flex align-content-center flex-wrap">
         <div class="container">
             <div class="login-content">
                 <div class="login-logo">
-                    <h2 style="color: #fff">Inventory Management System</h2>
+                    <h2 style="color: #8B0000; text-shadow: 2px 2px #000;">MAHABHARAT Auction 2.0</h2>
                 </div>
-                <div class="login-form">
+                <div class="login-form" style="background-color: rgba(211, 211, 211, 0.9); padding: 20px; border-radius: 10px; width: 300px; margin: auto;">
                     <form method="POST">
                         {% csrf_token %}
                         <div class="form-group">
                             <label>Username</label>
-                            <!-- <input type="text" class="form-control" placeholder="Username"> -->
                             {{ form.username }}
                         </div>
                         <div class="form-group">
                             <label>Password</label>
                             {{ form.password }}
                         </div>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox"> Remember Me
-                            </label>
-                            <label class="pull-right">
-                                <a href="#">Forgotten Password?</a>
-                            </label>
-
-                        </div>
-                        <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Log in</button>
-                        <div class="social-login-content">
-                            <div class="social-button">
-                                <button type="button" class="btn social facebook btn-flat btn-addon mb-3"><i class="ti-facebook"></i>Sign in with facebook</button>
-                                <button type="button" class="btn social twitter btn-flat btn-addon mt-2"><i class="ti-twitter"></i>Sign in with twitter</button>
-                            </div>
-                        </div>
-                        <div class="register-link m-t-15 text-center">
-                            <p>Don't have account ? <a href="#"> Sign Up Here</a></p>
-                        </div>
+                        <button type="submit" class="btn btn-success btn-block m-t-10">Log in</button>
+                        <!-- <div class="register-link m-t-15 text-center">
+                            <p>Don't have an account? <a href="#">Sign Up Here</a></p>
+                        </div> -->
                     </form>
                 </div>
             </div>

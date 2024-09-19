@@ -3,7 +3,28 @@
 {% block title %}Dashboard{% endblock title %}
 
 {% block content %}
-    <!-- Widgets  -->
+    <!-- Display messages (success, error, etc.) -->
+    {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            <div style="display: flex; justify-content: flex-end;">
+                {% for message in messages %}
+                    <div class="alert alert-dismissible fade show" 
+                         style="position: relative; margin: 5px; padding: 15px; border-radius: 5px; max-width: 300px; 
+                                background-color: {% if message.tags == 'error' %}#f8d7da{% elif message.tags == 'success' %}#d4edda{% else %}#d1ecf1{% endif %}; 
+                                color: {% if message.tags == 'error' %}#721c24{% elif message.tags == 'success' %}#155724{% else %}#0c5460{% endif %};">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; top: 10px; right: 10px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Widgets -->
     <div class="row">
         <div class="col-lg-3 col-md-6">
             <div class="card">
@@ -14,15 +35,15 @@
                         </div>
                         <div class="stat-content">
                             <div class="text-left dib">
-                                <div class="stat-text"><span class="count">{{ order }}</span></div>
-                                <div class="stat-heading">Order</div>
+                                <div class="stat-text"><span class="count">{{ total_teams }}</span></div>
+                                <div class="stat-heading">Teams</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+ 
         <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -32,15 +53,15 @@
                         </div>
                         <div class="stat-content">
                             <div class="text-left dib">
-                                <div class="stat-text"><span class="count">{{ product }}</span></div>
-                                <div class="stat-heading">Product</div>
+                                <div class="stat-text"><span class="count">{{ total_players }}</span></div>
+                                <div class="stat-heading">Registered for auction</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
+ 
         <div class="col-lg-3 col-md-6">
             <div class="card">
                 <div class="card-body">
@@ -50,94 +71,71 @@
                         </div>
                         <div class="stat-content">
                             <div class="text-left dib">
-                                <div class="stat-text"><span class="count">{{ supplier }}</span></div>
-                                <div class="stat-heading">Supplier</div>
+                                <div class="stat-text"><span class="count">{{ total_players_left }}</span></div>
+                                <div class="stat-heading">Players left to be bought</div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card">
-                <div class="card-body">
-                    <div class="stat-widget-five">
-                        <div class="stat-icon dib flat-color-4">
-                            <i class="fa fa-users"></i>
-                        </div>
-                        <div class="stat-content">
-                            <div class="text-left dib">
-                                <div class="stat-text"><span class="count">{{ buyer }}</span></div>
-                                <div class="stat-heading">Buyer</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+ 
     </div>
     <!-- /Widgets -->
     
     <div class="clearfix"></div>
-
-    <!-- Orders -->
+    
+    <!-- Players Table -->
     <div class="orders">
         <div class="row">
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="box-title">Orders </h4>
+                        <h4 class="box-title">Players to be auctioned</h4>
                     </div>
                     <div class="card-body--">
                         <div class="table-stats order-table ov-h">
                             <table class="table ">
                                 <thead>
                                     <tr>
-                                        <th class="serial">#</th>
-                                        <th>Supplier</th>
-                                        <th>Product</th>
-                                        <th>Design</th>
-                                        <th>Color</th>
-                                        <th>Buyer</th>
-                                        <th>Season</th>
-                                        <th>Drop</th>
-                                        <th>Date</th>
-                                        <th>Status</th>
+                                        <th class="serial">Player ID</th>
+                                        <th>Player Name</th>
+                                        <th>Profile</th>
+                                        <th>Price</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {% if orders %}
-                                    {% for order in orders %}
+                                    {% if players_list %}
+                                    {% for player in players_list %}
                                     <tr>
-                                        <td class="serial">{{ forloop.counter }}</td>
-                                        <td>{{ order.supplier }}</td>
-                                        <td>{{ order.product }}</td>
-                                        <td>{{ order.design }}</td>
-                                        <td>{{ order.color }}</td>
-                                        <td>{{ order.buyer }}</td>
-                                        <td>{{ order.season }}</td>
-                                        <td>{{ order.drop }}</td>
-                                        <td>{{ order.created_date }}</td>
+                                        <td class="serial">{{ player.player_id }}</td>
+                                        <td>{{ player.name }}</td>
                                         <td>
-                                            {% if order.status == 'pending' %}
-                                                <a class="btn btn-warning" href="">{{ order.status }}</a>
-                                            {% elif order.status == 'decline' %}
-                                                <a class="btn btn-danger" href="">{{ order.status }}</a>
-                                            {% elif order.status == 'complete' %}
-                                                <a class="btn btn-success" href="">{{ order.status }}</a>
-                                            {% elif order.status == 'approved' %}
-                                                <a class="btn btn-primary" href="">{{ order.status }}</a>
-                                            {% elif order.status == 'bulk' %}
-                                                <a class="btn btn-secondary" href="">{{ order.status }}</a>
+                                            {% if player.profile %}
+                                                <a href="{{ player.profile }}" target="_blank">View Profile</a>
                                             {% else %}
-                                                <a class="btn btn-info" href="">{{ order.status }}</a>
+                                                No Profile Available
                                             {% endif %}
+                                        </td>
+                                        <td>
+                                            <!-- Form to add to team -->
+                                            <form method="post" action="{% url 'add_player_to_team' %}" class="form-inline">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="player_id" value="{{ player.id }}">
+                                                <div class="form-group mx-sm-3 mb-2">
+                                                    <label for="price-{{ player.id }}" class="sr-only">Price</label>
+                                                    <input type="number" name="price" id="price-{{ player.id }}" class="form-control" placeholder="Price" required>
+                                                </div>
+                                                <button type="submit" name="team_id" value="1" class="btn btn-primary btn-wide" style="background-color: #50e3c2; color: white; width: 150px; margin-right: 5px;">Add to TC Cobras</button>
+                                                <button type="submit" name="team_id" value="2" class="btn btn-primary btn-wide" style="background-color: #ffebcc; color: #333; width: 150px; margin-right: 5px;">Add to TC Eagles</button>
+                                                <button type="submit" name="team_id" value="3" class="btn btn-primary btn-wide" style="background-color: #f3e5f5; color: #333; width: 150px;">Add to TC Hawks</button>
+                                            </form>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                     {% else %}
-                                        <tr><td>No Order Data</td></tr>
+                                        <tr><td>No Player Data</td></tr>
                                     {% endif %}
                                 </tbody>
                             </table>
@@ -145,8 +143,6 @@
                     </div>
                 </div> <!-- /.card -->
             </div>  <!-- /.col-lg-8 -->
-
-            
         </div>
     </div>
     <!-- /.orders -->

@@ -1,0 +1,94 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Players List -->
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="box-title">Players List</h4>
+            </div>
+            <div class="card-body--">
+                <div class="table-stats order-table ov-h">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="serial">Player ID</th>
+                                <th>Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if players %}
+                                {% for player in players %}
+                                    <tr>
+                                        <td class="serial">{{ player.player_id }}</td> <!-- Use player_id instead of serial number -->
+                                        <td>{{ player.name }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr><td colspan="2">No Player Data</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                    <!-- Button to generate random player -->
+                    <div class="text-center mt-3">
+                        <button id="random-btn" class="btn btn-primary">Generate Random Player</button>
+                    </div>
+                    
+                    <!-- Random player result -->
+                    <div id="random-player" class="text-center mt-3" style="font-weight: bold; color: #d32f2f;">
+                        <!-- Random player result will appear here -->
+                    </div>
+                </div>
+            </div>
+        </div> <!-- /.card -->
+    </div>  <!-- /.col-lg-12 -->
+</div>
+
+<script>
+    // Get players from Django template context
+    const players = [
+        {% for player in players %}
+            { id: {{ player.player_id }}, name: "{{ player.name }}" },
+        {% endfor %}
+    ];
+
+    // Function to generate a random player
+    function generateRandomPlayer() {
+        if (players.length === 0) {
+            document.getElementById('random-player').textContent = 'No players left to select!';
+            return;
+        }
+
+        const randomIndex = Math.floor(Math.random() * players.length);
+        const randomPlayer = players[randomIndex];
+
+        document.getElementById('random-player').textContent = `Player Name: ${randomPlayer.name}, Player Id: ${randomPlayer.id}`;
+
+        // Optionally, remove the selected player from the list
+        players.splice(randomIndex, 1);  // Remove the selected player
+        updatePlayerList();  // Re-render the player list without the selected player
+    }
+
+    // Function to update the player list (optional)
+    function updatePlayerList() {
+        const tableBody = document.querySelector('.table tbody');
+        tableBody.innerHTML = '';  // Clear existing content
+
+        players.forEach(player => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="serial">${player.id}</td> <!-- Display player_id -->
+                <td>${player.name}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    // Add event listener to the "Generate Random Player" button
+    document.getElementById('random-btn').addEventListener('click', generateRandomPlayer);
+
+    // Initial render of players (if needed)
+    updatePlayerList();
+</script>
+{% endblock content %}
