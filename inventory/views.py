@@ -7,21 +7,24 @@ from store import models
 from django.contrib import messages
 from django.db.models import Sum,F
 from django.db import transaction
+from datetime import datetime
 from store.models import Player, Team, AuctionLogs
 
 
 @login_required(login_url='login')
 def dashboard(request):
-    total_players = Player.objects.count()
+    total_players_regieterd_for_auction = Player.objects.filter(captain=False).count()
     total_teams = Team.objects.count()
-    total_players_left = Player.objects.filter(captain=False, team_id=None).count()
-    players_list = Player.objects.filter(captain=False, team_id=None).all()
+    total_players_remaining_for_auction = Player.objects.filter(captain=False, team_id=None, is_unsold=False).count()
+    total_players_unsold = Player.objects.filter(captain=False, team_id=None, is_unsold=True).count()
+    players_list_to_be_auctioned = Player.objects.filter(captain=False, team_id=None).all().order_by("player_id")
     teams_list = Team.objects.all()
     context = {
-        'total_players': total_players,
+        'total_players_regieterd_for_auction': total_players_regieterd_for_auction,
         'total_teams': total_teams,
-        'total_players_left': total_players_left,
-        'players_list': players_list,
+        'total_players_remaining_for_auction': total_players_remaining_for_auction,
+        'total_players_unsold': total_players_unsold,
+        'players_list': players_list_to_be_auctioned,
         'teams_list': teams_list
     }
     return render(request, 'dashboard.html', context)
@@ -69,10 +72,11 @@ def add_player_to_team(request):
             # If within budget, assign player to team and update price
             player.team = team
             player.price = int(price)
+            player.updated_at = datetime.now()
             player.save()
-            # import ipdb; ipdb.set_trace()
             AuctionLogs.objects.update_or_create(
-                player_order = player
+                player_order = player,
+                action = 'Sold'
             )
 
             # Success message
@@ -100,7 +104,7 @@ def add_player_to_team(request):
 def get_tc_cobras_list(request):
     # import ipdb; ipdb.set_trace()
     team_obj = Team.objects.get(name='TC Cobras')
-    team_list = Player.objects.filter(team=team_obj).all()
+    team_list = Player.objects.filter(team=team_obj).all().order_by("updated_at")
     total_budget = 900000
     total_spent = sum(player.price for player in team_list)
     remaining_budget = total_budget - total_spent
@@ -116,7 +120,7 @@ def get_tc_cobras_list(request):
 @login_required(login_url='login')
 def get_tc_eagles_list(request):
     team_obj = Team.objects.get(name='TC Eagles')
-    team_list = Player.objects.filter(team=team_obj).all()
+    team_list = Player.objects.filter(team=team_obj).all().order_by("updated_at")
     total_budget = 900000
     total_spent = sum(player.price for player in team_list)
     remaining_budget = total_budget - total_spent
@@ -132,7 +136,7 @@ def get_tc_eagles_list(request):
 @login_required(login_url='login')
 def get_tc_hawks_list(request):
     team_obj = Team.objects.get(name='TC Hawks')
-    team_list = Player.objects.filter(team=team_obj).all()
+    team_list = Player.objects.filter(team=team_obj).all().order_by("updated_at")
     total_budget = 900000
     total_spent = sum(player.price for player in team_list)
     remaining_budget = total_budget - total_spent
@@ -149,10 +153,11 @@ def get_tc_hawks_list(request):
 def history(request):
     all_logs = AuctionLogs.objects.values(
         "created_at",
+        "action",
         player_name=F("player_order__name"),
         player_price=F("player_order__price"),
         team_name=F("player_order__team__name")
-    ).order_by("created_at").all()
+    ).order_by("-created_at").all()
     context = {
         'logs': all_logs,
     }
@@ -160,6 +165,30 @@ def history(request):
 
 @login_required(login_url='login')
 def generate_random_player(request):
-    unsold_players = Player.objects.filter(team__isnull=True)  # Players without a team
+    unsold_players = Player.objects.filter(team__isnull=True, is_unsold=False).order_by("player_id")  # Players without a team
     print(unsold_players)
     return render(request, 'store/generate_random_player.html', {'players': unsold_players})
+
+@login_required(login_url='login')
+def generate_random_unsold_player(request):
+    unsold_players = Player.objects.filter(team__isnull=True, is_unsold=True).order_by("player_id")  # Players without a team
+    print(unsold_players)
+    return render(request, 'store/generate_random_unsold_players.html', {'players': unsold_players})
+
+@login_required(login_url='login')
+def mark_unsold(request):
+    if request.method == 'POST':
+        player_id = request.POST.get('player_id')
+        try:
+            player = Player.objects.get(id=player_id)
+            player.is_unsold = True
+            player.updated_at = datetime.now()
+            player.save()
+            AuctionLogs.objects.update_or_create(
+                player_order = player,
+                action = 'Unsold'
+            )
+            messages.success(request, 'Player marked as unsold.')
+        except Player.DoesNotExist:
+            messages.error(request, 'Player not found.')
+    return redirect('dashboard')

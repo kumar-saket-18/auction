@@ -35,6 +35,12 @@
                 <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-paper-plane"></i>Select Player To Auction</a>
                     <ul class="sub-menu children dropdown-menu">
+                        <li><i class="fa fa-th"></i><a href="{% url 'get-random-players' %}">View</a></li>
+                    </ul>
+                </li>
+                <li class="menu-item-has-children dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-paper-plane"></i>Unsold Players Auction</a>
+                    <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-th"></i><a href="{% url 'get-unsold-random-players' %}">View</a></li>
                     </ul>
                 </li>

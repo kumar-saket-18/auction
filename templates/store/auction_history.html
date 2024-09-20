@@ -17,6 +17,7 @@
                             <tr>
                                 <th class="serial">Sl No.</th>
                                 <th>Name</th>
+                                <th>Action</th>
                                 <th>Price</th>
                                 <th>Team</th>
                                 <th>Time</th>
@@ -28,7 +29,12 @@
                             <tr>
                                 <td class="serial">{{ forloop.counter }}</td>
                                 <td>{{ log.player_name }}</td>
-                                <td>₹{{ log.player_price }}</td>
+                                <td>{{ log.action }}</td>
+                                {% if log.action == 'Unsold' %}
+                                    <td>-</td>
+                                {% else %}
+                                    <td>₹{{ log.player_price }}</td>
+                                {% endif %}
                                 <td>{{ log.team_name }}</td>
                                 <td>{{ log.created_at }}</td>
                             </tr>

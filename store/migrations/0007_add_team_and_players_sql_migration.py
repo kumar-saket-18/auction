@@ -13,53 +13,57 @@ class Migration(migrations.Migration):
             sql="""
                 INSERT INTO team (name, budget, created_at)
                 VALUES
-                ('TC Cobras', 100000000, NOW()),
-                ('TC Eagles', 100000000, NOW()),
-                ('TC Hawks', 100000000, NOW());
+                ('TC Cobras', 900000, NOW()),
+                ('TC Eagles', 900000, NOW()),
+                ('TC Hawks', 900000, NOW());
 
             """
         ),
         migrations.RunSQL(
             sql="""
-                INSERT INTO player (name, price, team_id, captain, profile, player_id)
-                VALUES
-                ('Sagar', 0, 1, true, 'https://cricheroes.in/player-profile/1089441/Sagar',null),
-                ('Raushan', 0, 2, true, 'https://cricheroes.in/player-profile/856980/Raushan',null),
-                ('KD', 0, 3, true, 'https://cricheroes.in/player-profile/15759835/Kripanshu-Dubey',null),
-                ('Nikhil Dongre', 0, null, false, 'https://cricheroes.in/player-profile/705181/Nikhil-Dongre',1),
-                ('Nikhil Mishra', 0, null, false, 'https://cricheroes.in/player-profile/16300600/Nikhil-Mishra',2),
-                ('Mohan', 0, null, false, 'https://cricheroes.in/player-profile/21649875/Mohan',3),
-                ('Vijay', 0, null, false, 'https://cricheroes.in/player-profile/2579102/Vijay',4),
-                ('Vicky', 0, null, false, 'https://cricheroes.in/player-profile/151265/Vicky',5),
-                ('Shivansh', 0, null, false, 'https://cricheroes.in/player-profile/15553289/Shivansh-Rao',6),
-                ('Alankar', 0, null, false, 'https://cricheroes.in/player-profile/22349227/Alankar',7),
-                ('Saket', 0, null, false, 'https://cricheroes.in/player-profile/5216271/Saket',8),
-                ('Akhil', 0, null, false, 'https://cricheroes.in/player-profile/15460279/Akhil-Das',9),
-                ('Antaal', 0, null, false, 'https://cricheroes.in/player-profile/4512784/Vivek-Antaal',10),
-                ('Abhijeet', 0, null, false, 'https://cricheroes.in/player-profile/23205238/Abhijith-Shetty',11),
-                ('Sarath', 0, null, false, 'https://cricheroes.in/player-profile/306123/Sharath-MJ',12),
-                ('Rahul', 0, null, false, 'https://cricheroes.in/player-profile/9772810/Rahul-Dutta',13),
-                ('Akash', 0, null, false, 'https://cricheroes.in/player-profile/31012339/Akash-Dey',14),
-                ('Pavan', 0, null, false, 'https://cricheroes.in/player-profile/4208147/Pavan-Kumar-Tg',15),
-                ('Ritesh', 0, null, false, 'https://cricheroes.in/player-profile/1089427/Ritesh',16),
-                ('Shubham', 0, null, false, 'https://cricheroes.in/player-profile/1669960/Subham-Gupta',17),
-                ('Aditya', 0, null, false, 'https://cricheroes.in/player-profile/6093877/Aditya-Singh',18),
-                ('Rohit', 0, null, false, 'https://cricheroes.in/player-profile/18416372/rohit-vind',19),
-                ('Saurav Dixit', 0, null, false, 'https://cricheroes.in/player-profile/4130179/Saurav-Dixit',20),
-                ('Dixit Jain', 0, null, false, 'https://cricheroes.in/player-profile/51875/Dixit-Jain',21),
-                ('Nitesh', 0, null, false, 'https://cricheroes.in/player-profile/1380666/Nitesh-Gowda',22),
-                ('Soumya', 0, null, false, 'https://cricheroes.in/player-profile/16851683/Soumya-Ranjan-Mohapatra',23),
-                ('Rajat', 0, null, false, 'https://cricheroes.in/player-profile/1878882/Rajat-Shukla',24),
-                ('Ashok', 0, null, false, 'https://cricheroes.in/player-profile/2770596/Ashok-Reddy',25),
-                ('Lohit', 0, null, false, 'https://cricheroes.in/player-profile/18851525/Lohit-Kumar-Pradhan',26),
-                ('Teja', 0, null, false, 'https://cricheroes.in/player-profile/10801272/Teja',27),
-                ('Devlin', 0, null, false, 'https://cricheroes.in/player-profile/20170713/Devlin-Mukherjee',28),
-                ('Abdul', 0, null, false, 'https://cricheroes.in/player-profile/10515770/Abdul',29),
-                ('Amit Thakur', 0, null, false, 'https://cricheroes.in/player-profile/26026/Amit-Thakur',30),
-                ('Gautam', 0, null, false, 'https://cricheroes.in/player-profile/6190610/Gautham-Salian',31),
-                ('Shishir', 0, null, false, 'https://cricheroes.in/player-profile/27970221/SR',32),
-                ('Vinodh', 0, null, false, 'https://cricheroes.in/player-profile/16990144/Vinodh',33)
+                INSERT INTO player (name, price, team_id, captain, profile, player_id, is_unsold, updated_at)
+                    VALUES
+                ('Sagar', 0, 1, true, 'https://cricheroes.in/player-profile/1089441/Sagar', 0, false, NOW()),
+                ('KD', 0, 2, true, 'https://cricheroes.in/player-profile/15759835/Kripanshu-Dubey', 0, false, NOW()),
+                ('Raushan', 0, 3, true, 'https://cricheroes.in/player-profile/856980/Raushan', 0, false, NOW()),
+                ('Antaal', 0, null, false, 'https://cricheroes.in/player-profile/4512784/Vivek-Antaal', 1, false, NOW()),
+                ('Pavan', 0, null, false, 'https://cricheroes.in/player-profile/4208147/Pavan-Kumar-Tg', 2, false, NOW()),
+                ('Nikhil Mishra', 0, null, false, 'https://cricheroes.in/player-profile/16300600/Nikhil-Mishra', 3, false, NOW()),
+                ('Gautam Salian', 0, null, false, 'https://cricheroes.in/player-profile/6190610/Gautham-Salian', 4, false, NOW()),
+                ('Abhijeet', 0, null, false, 'https://cricheroes.in/player-profile/23205238/Abhijith-Shetty', 5, false, NOW()),
+                ('Mohan Naik', 0, null, false, 'https://cricheroes.in/player-profile/21649875/Mohan', 6, false, NOW()),
+                ('Saket', 0, null, false, 'https://cricheroes.in/player-profile/5216271/Saket', 7, false, NOW()),
+                ('Devesh', 0, null, false, 'https://cricheroes.in/player-profile/16796890/Devesh', 8, false, NOW()),
+                ('Sashikant Sharma', 0, null, false, 'https://cricheroes.in/player-profile/8051173/Shashi-Kant-Sharma', 9, false, NOW()),
+                ('Akhil', 0, null, false, 'https://cricheroes.in/player-profile/15460279/Akhil-Das', 10, false, NOW()),
+                ('Rohit', 0, null, false, 'https://cricheroes.in/player-profile/18416372/rohit-vind', 11, false, NOW()),
+                ('Vijay', 0, null, false, 'https://cricheroes.in/player-profile/2579102/Vijay', 12, false, NOW()),
+                ('Shivansh', 0, null, false, 'https://cricheroes.in/player-profile/15553289/Shivansh-Rao', 13, false, NOW()),
+                ('Amit Thakur', 0, null, false, 'https://cricheroes.in/player-profile/26026/Amit-Thakur', 14, false, NOW()),
+                ('Alankar', 0, null, false, 'https://cricheroes.in/player-profile/22349227/Alankar', 15, false, NOW()),
+                ('Sandy', 0, null, false, 'https://cricheroes.in/player-profile/961265/Sandy', 16, false, NOW()),
+                ('Akash', 0, null, false, 'https://cricheroes.in/player-profile/31012339/Akash-Dey', 17, false, NOW()),
+                ('Abdul', 0, null, false, 'https://cricheroes.in/player-profile/10515770/Abdul', 18, false, NOW()),
+                ('Shubham', 0, null, false, 'https://cricheroes.in/player-profile/1669960/Subham-Gupta', 19, false, NOW()),
+                ('Nitesh', 0, null, false, 'https://cricheroes.in/player-profile/1380666/Nitesh-Gowda', 20, false, NOW()),
+                ('Vicky', 0, null, false, 'https://cricheroes.in/player-profile/151265/Vicky', 21, false, NOW()),
+                ('Dixit Jain', 0, null, false, 'https://cricheroes.in/player-profile/51875/Dixit-Jain', 22, false, NOW()),
+                ('Aditya Singh L', 0, null, false, 'https://cricheroes.in/player-profile/15126307/Aditya-Singh', 23, false, NOW()),
+                ('Ashok Reddy', 0, null, false, 'https://cricheroes.in/player-profile/2770596/Ashok-Reddy', 24, false, NOW()),
+                ('Vinodh', 0, null, false, 'https://cricheroes.in/player-profile/16990144/Vinodh', 25, false, NOW()),
+                ('Saurav Dixit', 0, null, false, 'https://cricheroes.in/player-profile/4130179/Saurav-Dixit', 26, false, NOW()),
+                ('Nikhil Dongre', 0, null, false, 'https://cricheroes.in/player-profile/705181/Nikhil-Dongre', 27, false, NOW()),
+                ('Rahul', 0, null, false, 'https://cricheroes.in/player-profile/9772810/Rahul-Dutta', 28, false, NOW()),
+                ('Devlin', 0, null, false, 'https://cricheroes.in/player-profile/20170713/Devlin-Mukherjee', 29, false, NOW()),
+                ('Lohit', 0, null, false, 'https://cricheroes.in/player-profile/18851525/Lohit-Kumar-Pradhan', 30, false, NOW()),
+                ('Aditya Singh', 0, null, false, 'https://cricheroes.in/player-profile/6093877/Aditya-Singh', 31, false, NOW()),
+                ('Sarath', 0, null, false, 'https://cricheroes.in/player-profile/306123/Sharath-MJ', 32, false, NOW()),
+                ('Ritesh', 0, null, false, 'https://cricheroes.in/player-profile/1089427/Ritesh', 33, false, NOW()),
+                ('Rajat', 0, null, false, 'https://cricheroes.in/player-profile/1878882/Rajat-Shukla', 34, false, NOW()),
+                ('Noel George', 0, null, false, 'https://cricheroes.in/player-profile/6190602/Noel-George', 35, false, NOW()),
+                ('Amitesh Pandey', 0, null, false, 'https://cricheroes.in/player-profile/3608030/Amitesh-Pandey', 36, false, NOW()),
+                ('Shishir', 0, null, false, 'https://cricheroes.in/player-profile/27970221/SR', 37, false, NOW());
 
             """
-        )
-    ]
+                )
+            ]

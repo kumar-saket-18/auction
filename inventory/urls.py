@@ -16,18 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-from .views import add_player_to_team, dashboard, get_tc_cobras_list, get_tc_eagles_list, get_tc_hawks_list, history, generate_random_player
+from .views import add_player_to_team, dashboard, get_tc_cobras_list, get_tc_eagles_list, get_tc_hawks_list, history, generate_random_player, mark_unsold, generate_random_unsold_player
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', dashboard, name='dashboard'),
     path('users/', include('users.urls')),
     path('store/', include('store.urls')),
-    path('api/add-player-to-team/', add_player_to_team, name='add_player_to_team'),
+    path('add_player_to_team/', add_player_to_team, name='add_player_to_team'),
     path('get-tc-cobras-player-list/', get_tc_cobras_list, name='get-tc-cobras-player-list'),
     path('get-tc-eagles-player-list/', get_tc_eagles_list, name='get-tc-eagles-player-list'),
     path('get-tc-hawks-player-list/', get_tc_hawks_list, name='get-tc-hawks-player-list'),
     path('history/', history, name='history'),
-    path('get-unsold-random-players/', generate_random_player, name='get-unsold-random-players'),
+    path('get-random-players/', generate_random_player, name='get-random-players'),
+    path('get-unsold-random-players/', generate_random_unsold_player, name='get-unsold-random-players'),
+    path('mark_unsold/', mark_unsold, name='mark_unsold'),
 
 ]
