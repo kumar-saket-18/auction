@@ -82,11 +82,11 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'dpg-crmn98dumphs739hj4j0-a.oregon-postgres.render.com',
         "PORT":  5432,
-        "NAME":  "mahabharat",
-        "USER": "kumar",
-        "PASSWORD": "saket1654",
+        "NAME":  "auction_i3bk",
+        "USER": "admin",
+        "PASSWORD": "AeSLdn821fgWIYDGhqTaflFfL5wxXFm8",
     }
 }
 
