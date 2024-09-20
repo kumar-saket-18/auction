@@ -82,7 +82,8 @@ WSGI_APPLICATION = 'inventory.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'dpg-crmn98dumphs739hj4j0-a.oregon-postgres.render.com',
+        'ENGINE': 'django.db.backends.postgresql',
+        "HOST": "dpg-crmn98dumphs739hj4j0-a.oregon-postgres.render.com",
         "PORT":  5432,
         "NAME":  "auction_i3bk",
         "USER": "admin",
