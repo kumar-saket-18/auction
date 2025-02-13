@@ -1,0 +1,65 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <!-- Box displaying remaining players and remaining purse with light background -->
+    <div class="col-xl-12">
+        <div class="card" style="background-color: #edd2f1; color: #333;"> <!-- Light grey background -->
+            <div class="card-body">
+                <h4 class="box-title">Team Overview</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Players Remaining to be Bought:</strong> {{ remaining_players }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Remaining Purse:</strong> ₹{{ remaining_budget }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Players List -->
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="box-title">Players List </h4>
+            </div>
+            <div class="card-body--">
+                <div class="table-stats order-table ov-h">
+                    <table class="table ">
+                        <thead>
+                            <tr>
+                                <th class="serial">Sl No.</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Profile</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if team_list %}
+                            {% for player in team_list %}
+                            <tr>
+                                <td class="serial">{{ forloop.counter }}</td>
+                                <td>{{ player.name }}</td>
+                                <td>₹{{ player.price }}</td>
+                                <td>
+                                    {% if player.profile %}
+                                        <a href="{{ player.profile }}" target="_blank">View Profile</a>
+                                    {% else %}
+                                        No Profile Available
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            {% else %}
+                                <tr><td colspan="4">No Player Data</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div> <!-- /.table-stats -->
+            </div>
+        </div> <!-- /.card -->
+    </div>  <!-- /.col-lg-8 -->
+</div>
+{% endblock content %}

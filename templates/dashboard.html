@@ -1,0 +1,299 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% block content %}
+    <!-- Display messages (success, error, etc.) -->
+    {% if messages %}
+    <div class="row">
+        <div class="col-12">
+            <div style="display: flex; justify-content: flex-end;">
+                {% for message in messages %}
+                    <div class="alert alert-dismissible fade show" 
+                         style="position: relative; margin: 5px; padding: 15px; border-radius: 5px; max-width: 300px; 
+                                background-color: {% if message.tags == 'error' %}#f8d7da{% elif message.tags == 'success' %}#d4edda{% else %}#d1ecf1{% endif %}; 
+                                color: {% if message.tags == 'error' %}#721c24{% elif message.tags == 'success' %}#155724{% else %}#0c5460{% endif %};">
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; top: 10px; right: 10px;">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Widgets -->
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-1">
+                            <i class="fa fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">{{ total_teams }}</span></div>
+                                <div class="stat-heading">Teams</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-2">
+                            <i class="fa fa-id-card"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">{{ total_players_registered_for_auction }}</span></div>
+                                <div class="stat-heading">Registered for auction</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-3">
+                            <i class="fa fa-hourglass-half"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">{{ total_players_remaining_for_auction }}</span></div>
+                                <div class="stat-heading">Players left to be auctioned</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-five">
+                        <div class="stat-icon dib flat-color-4">
+                            <i class="fa fa-user-times"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="text-left dib">
+                                <div class="stat-text"><span class="count">{{ total_players_unsold }}</span></div>
+                                <div class="stat-heading">Players Unsold</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Widgets -->
+
+    <div class="clearfix"></div>
+
+    <!-- Players Table -->
+    <div class="orders">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">Players to be auctioned</h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats order-table ov-h">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="serial">Sl No.</th>
+                                        <th>Player Id</th>
+                                        <th>Player Name</th>
+                                        <th>Profile</th>
+                                        <th>Add To Team</th>
+                                        <th>Mark Unsold</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if players_list %}
+                                    {% for player in players_list %}
+                                    <tr>
+                                        <td class="serial">{{ forloop.counter }}</td>
+                                        <td>{{ player.player_id }}</td>
+                                        <td>{{ player.name }}</td>
+                                        <td>
+                                            {% if player.profile %}
+                                                <a href="{{ player.profile }}" target="_blank">View Profile</a>
+                                            {% else %}
+                                                No Profile Available
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <!-- Add To Team Button -->
+                                            <button type="button" class="button-56 button-add-to-team" data-toggle="modal" data-target="#addToTeamModal-{{ player.id }}">
+                                                Add To Team
+                                            </button>
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="addToTeamModal-{{ player.id }}" tabindex="-1" role="dialog" aria-labelledby="addToTeamModalLabel-{{ player.id }}" aria-hidden="true">
+                                                <div class="modal-dialog" role="document">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="addToTeamModalLabel-{{ player.id }}">Add {{ player.name }} to Team</h5>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form method="post" action="{% url 'add_player_to_team' %}">
+                                                                {% csrf_token %}
+                                                                <input type="hidden" name="player_id" value="{{ player.id }}">
+                                                                <div class="form-group">
+                                                                    <label for="price-{{ player.id }}">Price</label>
+                                                                    <input type="number" name="price" id="price-{{ player.id }}" class="form-control" placeholder="Price" required>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label>Select Team</label>
+                                                                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                                                        <label class="btn btn-secondary" style="background-color: #54cedc77; color: #333;">
+                                                                            <input type="radio" name="team_id" value="1"> TC Falcons
+                                                                        </label>
+                                                                        <label class="btn btn-secondary" style="background-color: #ffebcc; color: #333;">
+                                                                            <input type="radio" name="team_id" value="2"> TC Eagles
+                                                                        </label>
+                                                                        <label class="btn btn-secondary" style="background-color: #edd2f1; color: #333;">
+                                                                            <input type="radio" name="team_id" value="3"> TC Hawks
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    <button type="submit" class="btn btn-primary">Add Player</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {% if player.is_unsold %}
+                                                <i class="fa fa-times-circle text-danger" aria-hidden="true" title="Marked Unsold"></i>
+                                            {% else %}
+                                                <!-- Form to mark player as unsold -->
+                                                <form method="post" action="{% url 'mark_unsold' %}" class="form-inline">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="player_id" value="{{ player.id }}">
+                                                    <button type="submit" class="button-56 button-mark-unsold">
+                                                         Mark Unsold
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </td>
+                                        
+                                    </tr>
+                                    {% endfor %}
+                                    {% else %}
+                                        <tr><td colspan="7" class="text-center">No Player Data</td></tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div> <!-- /.table-stats -->
+                    </div>
+                </div> <!-- /.card -->
+            </div>  <!-- /.col-xl-12 -->
+        </div>
+    </div>
+    <style>
+        /* Common Button Style */
+        .button-56 {
+        align-items: center;
+        border: 2px solid #111;
+        border-radius: 8px;
+        box-sizing: border-box;
+        color: #111;
+        cursor: pointer;
+        display: flex;
+        font-family: Inter, sans-serif;
+        font-size: 16px;
+        height: 48px;
+        justify-content: center;
+        line-height: 24px;
+        max-width: 100%;
+        padding: 0 25px;
+        position: relative;
+        text-align: center;
+        text-decoration: none;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        }
+
+        .button-56:after {
+        background-color: #111;
+        border-radius: 8px;
+        content: "";
+        display: block;
+        height: 48px;
+        left: 0;
+        width: 100%;
+        position: absolute;
+        top: -2px;
+        transform: translate(8px, 8px);
+        transition: transform .2s ease-out;
+        z-index: -1;
+        }
+
+        .button-56:hover:after {
+        transform: translate(0, 0);
+        }
+
+        .button-56:active {
+        outline: 0;
+        }
+
+        .button-56:hover {
+        outline: 0;
+        }
+
+        /* Add to Team Button Color */
+        .button-add-to-team {
+        background-color: #b3e5fc; /* Light Blue */
+        border: 2px solid #81d4fa; /* Slightly darker blue border */
+        color: #01579b; /* Dark blue text */
+        }
+
+        .button-add-to-team:hover {
+        background-color: #81d4fa; /* Slightly darker blue on hover */
+        }
+
+        .button-add-to-team:active {
+        background-color: #4fc3f7; /* Even darker blue when active */
+        }
+
+        /* Mark Unsold Button Color */
+        .button-mark-unsold {
+        background-color: #ffccbc; /* Light Peach */
+        border: 2px solid #ffab91; /* Slightly darker peach border */
+        color: #d84315; /* Dark peach text */
+        }
+
+        .button-mark-unsold:hover {
+        background-color: #ffab91; /* Slightly darker peach on hover */
+        }
+
+        .button-mark-unsold:active {
+        background-color: #ff8a65; /* Even darker peach when active */
+        }
+
+    </style>
+    <!-- /.orders -->
+{% endblock content %}

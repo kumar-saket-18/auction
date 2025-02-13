@@ -1,0 +1,154 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-xl-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h4 class="box-title">Players List</h4>
+                    <span id="player-counter" style="font-weight: bold; color: #007bff;"></span>
+                </div>
+            </div>
+
+            <div class="card-body--">
+                <div class="table-stats order-table ov-h">
+                    <!-- Category Selector -->
+                    <div class="text-center mb-3">
+                        <label for="category-select">Select Category:</label>
+                        <select id="category-select" class="form-control" style="width: 200px; display: inline-block;">
+                            {% for category in categorized_players.keys %}
+                                <option value="{{ category }}">{{ category }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="serial">Player ID</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                            </tr>
+                        </thead>
+                        <tbody id="player-table-body">
+                            {% for category, players in categorized_players.items %}
+                                {% for player in players %}
+                                    <tr class="player-row" data-category="{{ category }}" id="player-row-{{ player.player_id }}">
+                                        <td class="serial">{{ player.player_id }}</td>
+                                        <td>{{ player.name }}</td>
+                                        <td>{{ category }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endfor %}
+                            {% if not categorized_players %}
+                                <tr id="no-players-message">
+                                    <td colspan="3" class="text-center">No Player Data</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+
+                    <!-- Coin flipping animation button -->
+                    <div class="text-center mt-3">
+                        <button id="random-btn" class="btn btn-primary" style="border-radius: 50%; width: 80px; height: 80px; padding: 0; background-color: #f1c40f; border: 2px solid #d4ac0d;">
+                            <i id="coin-icon" class="fas fa-coins" style="font-size: 2.5rem; color: #fff;"></i>
+                        </button>
+                    </div>
+
+                    <!-- Random player result -->
+                    <div id="random-player" class="text-center mt-3" style="font-weight: bold; color: #d32f2f;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CSS for Coin Flip Animation -->
+<style>
+    @keyframes flipCoin {
+        0% { transform: rotateY(0deg); }
+        50% { transform: rotateY(180deg); }
+        100% { transform: rotateY(360deg); }
+    }
+    #coin-icon.coin-flipping {
+        animation: flipCoin 1.5s ease-in-out;
+    }
+</style>
+
+<script>
+    // Players grouped by category
+    let categorizedPlayers = {
+        {% for category, players in categorized_players.items %}
+            "{{ category }}": [
+                {% for player in players %}
+                    { id: {{ player.player_id }}, name: "{{ player.name }}" },
+                {% endfor %}
+            ],
+        {% endfor %}
+    };
+
+    function updatePlayerList() {
+        let selectedCategory = document.getElementById("category-select").value;
+        let allRows = document.querySelectorAll(".player-row");
+
+        allRows.forEach(row => {
+            if (row.getAttribute("data-category") === selectedCategory) {
+                row.style.display = ""; // Show the row
+            } else {
+                row.style.display = "none"; // Hide other rows
+            }
+        });
+
+        updatePlayerCounter();
+    }
+
+    function updatePlayerCounter() {
+        let selectedCategory = document.getElementById("category-select").value;
+        let count = categorizedPlayers[selectedCategory] ? categorizedPlayers[selectedCategory].length : 0;
+        document.getElementById("player-counter").textContent = `Total Players Left in ${selectedCategory}: ${count}`;
+    }
+
+    function generateRandomPlayer() {
+        let selectedCategory = document.getElementById("category-select").value;
+
+        if (!categorizedPlayers[selectedCategory] || categorizedPlayers[selectedCategory].length === 0) {
+            document.getElementById('random-player').textContent = `No players left in ${selectedCategory}!`;
+            return;
+        }
+
+        // Coin flip animation
+        const coinIcon = document.getElementById('coin-icon');
+        coinIcon.classList.add('coin-flipping');
+
+        const button = document.getElementById('random-btn');
+        button.disabled = true;
+
+        setTimeout(() => {
+            let randomIndex = Math.floor(Math.random() * categorizedPlayers[selectedCategory].length);
+            let randomPlayer = categorizedPlayers[selectedCategory][randomIndex];
+
+            document.getElementById('random-player').textContent = `Player Name: ${randomPlayer.name}, Player Id: ${randomPlayer.id}`;
+
+            // Remove from frontend table
+            let row = document.getElementById(`player-row-${randomPlayer.id}`);
+            if (row) row.remove();
+
+            // Remove from JavaScript list
+            categorizedPlayers[selectedCategory].splice(randomIndex, 1);
+            updatePlayerCounter();
+
+            coinIcon.classList.remove('coin-flipping');
+            button.disabled = false;
+        }, 1500);
+    }
+
+    document.getElementById('random-btn').addEventListener('click', generateRandomPlayer);
+    document.getElementById('category-select').addEventListener('change', updatePlayerList);
+
+    // Initial render
+    updatePlayerList();
+</script>
+
+
+{% endblock content %}
