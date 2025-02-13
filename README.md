@@ -4,20 +4,20 @@ This is a inventory management system
 # How to Setup
 1. Clone Project
 ```
-git clone https://github.com/sajib1066/inventory-management.git
+git clone https://github.com/kumar-saket-18/auction.git
 ```
 
 2. Go To Project Directory
 ```
-cd inventory-management
+cd auction
 ```
 3. Create Virtual Environment
 ```
-python3 -m venv venv
+python3 -m venv env
 ```
 4. Active Virtual Environment
 ```
-source venv/bin/activate
+source env/bin/activate
 ```
 5. Install Requirements File
 ```
