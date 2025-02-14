@@ -3,26 +3,88 @@
 {% block title %}Dashboard{% endblock title %}
 
 {% block content %}
-    <!-- Display messages (success, error, etc.) -->
-    {% if messages %}
-    <div class="row">
-        <div class="col-12">
-            <div style="display: flex; justify-content: flex-end;">
-                {% for message in messages %}
-                    <div class="alert alert-dismissible fade show" 
-                         style="position: relative; margin: 5px; padding: 15px; border-radius: 5px; max-width: 300px; 
-                                background-color: {% if message.tags == 'error' %}#f8d7da{% elif message.tags == 'success' %}#d4edda{% else %}#d1ecf1{% endif %}; 
-                                color: {% if message.tags == 'error' %}#721c24{% elif message.tags == 'success' %}#155724{% else %}#0c5460{% endif %};">
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="position: absolute; top: 10px; right: 10px;">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1"></script>
+<!-- Display messages (success, error, etc.) -->
+{% if messages %}
+    {% for message in messages %}
+    <div class="alert 
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}alert-success
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}alert-danger
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}alert-warning
+        {% else %}alert-info{% endif %} 
+        alert-dismissible fade show" role="alert">
+        
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+            🎉 {{ message }}
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+            🚨 {{ message }}
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+            ⚠️ {{ message }} <span class="warning-extra"></span>
+        {% else %}
+            {{ message }}
+        {% endif %}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
     </div>
-    {% endif %}
+    
+    {% endfor %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let successMessages = document.querySelectorAll('.alert-success');
+            let warningMessages = document.querySelectorAll('.alert-warning .warning-extra');
+
+            // 🎉 Confetti for success messages
+            if (successMessages.length > 0) {  
+                function shootConfetti() {
+                    let count = 200;
+                    let defaults = { origin: { y: 0.6 } };
+
+                    function fire(particleRatio, opts) {
+                        confetti(Object.assign({}, defaults, opts, {
+                            particleCount: Math.floor(count * particleRatio)
+                        }));
+                    }
+
+                    fire(0.25, { spread: 60, startVelocity: 55, colors: ['#ff0000', '#ff7300', '#ffeb00', '#47d147', '#0044ff', '#9900cc'] });
+                    fire(0.2, { spread: 100, colors: ['#ff0000', '#ff7300', '#ffeb00'] });
+                    fire(0.35, { spread: 120, decay: 0.91, colors: ['#47d147', '#0044ff', '#9900cc'] });
+                    fire(0.1, { spread: 130, startVelocity: 25, colors: ['#ff0000', '#ff7300'] });
+                    fire(0.3, { spread: 150, startVelocity: 45, colors: ['#ffeb00', '#47d147', '#0044ff'] });
+                }
+
+                shootConfetti();
+                setTimeout(shootConfetti, 500);
+                setTimeout(shootConfetti, 1000);
+            }
+
+            // ⚠️ Random motivational extensions for warnings
+            let motivationalMessages = [
+                "💪 Keep going, you got this!",
+                "🌟 Better luck next time! You're still awesome!",
+                "🚀 Stay positive! Great things are ahead!",
+                "💡 Every setback is a setup for a comeback!",
+                "🔥 Never give up, success is around the corner!",
+                "🌱 Learn, grow, and conquer!"
+            ];
+
+            if (warningMessages.length > 0) {
+                warningMessages.forEach((warning) => {
+                    let randomMessage = motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)];
+                    warning.innerHTML = " " + randomMessage;
+                });
+
+                // Console log messages for extra motivation
+                console.log(`%c ⚠️ ${motivationalMessages[Math.floor(Math.random() * motivationalMessages.length)]}`, 
+                    'color: orange; font-size: 16px; font-weight: bold; background-color: black; padding: 8px;');
+            }
+        });
+    </script>
+{% endif %}
+
+
+
+
 
     <!-- Widgets -->
     <div class="row">

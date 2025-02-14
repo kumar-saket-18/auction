@@ -77,12 +77,12 @@ def add_player_to_team(request):
             player.updated_at = datetime.now()
             player.save()
 
-            AuctionLogs.objects.update_or_create(
+            AuctionLogs.objects.create(
                 player_order=player,
                 action=AuctionLogsActionEnum.SOLD.value
             )
-
-            messages.success(request, SuccessMessages.PLAYER_ADDED)
+            # import ipdb; ipdb.set_trace()
+            messages.success(request, SuccessMessages.PLAYER_ADDED % (player.name, team.name))
             return redirect('dashboard')
 
     except ValueError:
@@ -196,10 +196,10 @@ def mark_unsold(request):
         player.updated_at = datetime.now()
         player.save()
 
-        AuctionLogs.objects.update_or_create(
+        AuctionLogs.objects.create(
             player_order=player,
-            defaults={"action": AuctionLogsActionEnum.UNSOLD.value}
+            action=AuctionLogsActionEnum.UNSOLD.value
         )
 
-        messages.success(request, SuccessMessages.PLAYER_MARKED_UNSOLD)
+        messages.warning(request, SuccessMessages.PLAYER_MARKED_AS_UNSOLD % player.name)
     return redirect('dashboard')
