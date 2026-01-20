@@ -17,7 +17,7 @@ class ErrorStrings:
     MISSING_PARAMETERS = 'Required parameters are missing.'
 
 class SuccessMessages:
-    PLAYER_ADDED = "%s will play for  %s in Mahabharata 3.0"
+    PLAYER_ADDED = "%s will play for  %s in Mahabharata 4.0"
     PLAYER_MARKED_AS_UNSOLD = "%s remain unsold"
 
 class AuctionLogsActionEnum(enum.Enum):

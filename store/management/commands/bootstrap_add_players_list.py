@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         try:
             filepath = options["filepath"]
-            self.update_teams_in_db(filepath)
+            # self.update_teams_in_db(filepath)
             self.update_players_in_db(filepath)
             print("SUCCESSFULLY DONE.")
         except Exception as e:
@@ -32,6 +32,7 @@ class Command(BaseCommand):
                 team, created = Team.objects.get_or_create(
                     name=row["Team Name"],
                     defaults={
+                        "id": index + 1,
                         "budget": row["Budget"],
                         "max_players": row["Team Size"],
                     },
