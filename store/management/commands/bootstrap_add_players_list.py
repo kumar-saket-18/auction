@@ -51,9 +51,13 @@ class Command(BaseCommand):
             # Read the excel file
             # import ipdb; ipdb.set_trace()
             df = pd.read_excel(filepath, sheet_name="Players")
+            # df["Captain"] = df["Captain"].astype(str).str.strip().str.lower()
+            # df["Captain"] = df["Captain"].isin(["yes", "true", "1"])
             # Iterate over the rows
             for index, row in df.iterrows():
+                print(index, row["Player"])
                 is_captain=row["Captain"]
+                print(is_captain)
                 player = Player.objects.create(
                     name=row["Player"],
                     player_id=index+1,
